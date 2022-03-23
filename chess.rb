@@ -290,72 +290,80 @@ class Knight < Piece
     moves = []
     row = current_position[0]
     column = current_position[1]
-
+    check_move(row - 2, column + 1, moves, board)
+    check_move(row - 1, column + 2, moves, board)
+    check_move(row + 1, column + 2, moves, board)
+    check_move(row + 2, column + 1, moves, board)
+    check_move(row + 2, column - 1, moves, board)
+    check_move(row + 1, column - 2, moves, board)
+    check_move(row - 1, column - 2, moves, board)
+    check_move(row - 2, column - 1, moves, board)
+    p moves 
+    return moves
   end
+
+  def check_move(row, column, moves, board)
+    if row.between?(0, 7) && column.between?(0, 7)
+      if !board[row][column].is_a?(Piece)
+        moves.push([row, column])
+      elsif board[row][column].color != self.color 
+        moves.push([row, column])
+      end
+    end
+  end
+
 end
 
 class Bishop < Piece
   def find_possible_moves(current_position, board)
+    stop = false
     moves = []
     row = current_position[0]
     column = current_position[1]
     row_index = row - 1
     column_index = column + 1
-    while row_index.between?(0, 7) && column_index.between?(0, 7)
-      if !board[row_index][column_index].is_a?(Piece)
-        moves.push([row_index, column_index])
-      elsif board[row_index][column_index].color == self.color
-        break
-      else
-        moves.push([row_index, column_index])
-        break
-      end
+    while row_index.between?(0, 7) && column_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
       row_index -= 1
       column_index += 1
     end
     row_index = row - 1
     column_index = column - 1
-    while row_index.between?(0, 7) && column_index.between?(0, 7)
-      if !board[row_index][column_index].is_a?(Piece)
-        moves.push([row_index, column_index])
-      elsif board[row_index][column_index].color == self.color
-        break
-      else
-        moves.push([row_index, column_index])
-        break
-      end
+    stop = false
+    while row_index.between?(0, 7) && column_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
       row_index -= 1
       column_index -= 1
     end
     row_index = row + 1
     column_index = column + 1
-    while row_index.between?(0, 7) && column_index.between?(0, 7)
-      if !board[row_index][column_index].is_a?(Piece)
-        moves.push([row_index, column_index])
-      elsif board[row_index][column_index].color == self.color
-        break
-      else
-        moves.push([row_index, column_index])
-        break
-      end
+    stop = false
+    while row_index.between?(0, 7) && column_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
       row_index += 1
       column_index += 1
     end
     row_index = row + 1
     column_index = column - 1
-    while row_index.between?(0, 7) && column_index.between?(0, 7)
-      if !board[row_index][column_index].is_a?(Piece)
-        moves.push([row_index, column_index])
-      elsif board[row_index][column_index].color == self.color
-        break
-      else
-        moves.push([row_index, column_index])
-        break
-      end
+    stop = false
+    while row_index.between?(0, 7) && column_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
       row_index += 1
       column_index -= 1
     end
     return moves
+  end
+
+  def check_move(row, column, moves, board, stop)
+    if !board[row][column].is_a?(Piece)
+      moves.push([row, column])
+    elsif board[row][column].color == self.color
+      stop = true
+    else
+      moves.push([row_index, column_index])
+      stop = true
+    end
+    return stop 
   end
 end
 
@@ -389,12 +397,131 @@ class King < Piece
 end
 
 class Queen < Piece
-  def find_possible_moves
+  def find_possible_moves(current_position, board)
+    stop = false
+    moves = []
+    row = current_position[0]
+    column = current_position[1]
+    row_index = row
+    column_index = column + 1
+    while column_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
+      column_index += 1
+    end
+    column_index = column - 1
+    stop = false
+    while column_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
+      column_index -= 1
+    end
+    column_index = column 
+    row_index = row - 1
+    stop = false
+    while row_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
+      row_index -= 1
+    end
+    row_index = row + 1
+    stop = false
+    while row_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
+      row_index += 1
+    end
+    row_index = row - 1
+    column_index = column + 1
+    while row_index.between?(0, 7) && column_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
+      row_index -= 1
+      column_index += 1
+    end
+    row_index = row - 1
+    column_index = column - 1
+    stop = false
+    while row_index.between?(0, 7) && column_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
+      row_index -= 1
+      column_index -= 1
+    end
+    row_index = row + 1
+    column_index = column + 1
+    stop = false
+    while row_index.between?(0, 7) && column_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
+      row_index += 1
+      column_index += 1
+    end
+    row_index = row + 1
+    column_index = column - 1
+    stop = false
+    while row_index.between?(0, 7) && column_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
+      row_index += 1
+      column_index -= 1
+    end
+    return moves
+  end
+   
+  def check_move(row, column, moves, board, stop)
+    if board[row][column].is_a?(Piece) 
+      if board[row][column].color != self.color
+        moves.push([row, column])
+        stop = true
+      else
+        stop = true
+      end
+    else
+      moves.push([row, column])
+    end
+    return stop
   end
 end
 
 class Rook < Piece
-  def find_possible_moves
+  def find_possible_moves(current_position, board)
+    stop = false
+    moves = []
+    row = current_position[0]
+    column = current_position[1]
+    row_index = row
+    column_index = column + 1
+    while column_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
+      column_index += 1
+    end
+    column_index = column - 1
+    stop = false
+    while column_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
+      column_index -= 1
+    end
+    column_index = column 
+    row_index = row - 1
+    stop = false
+    while row_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
+      row_index -= 1
+    end
+    row_index = row + 1
+    stop = false
+    while row_index.between?(0, 7) && stop == false
+      stop = check_move(row_index, column_index, moves, board, stop)
+      row_index += 1
+    end
+    return moves
+  end
+
+  def check_move(row, column, moves, board, stop)
+    if board[row][column].is_a?(Piece) 
+      if board[row][column].color != self.color
+        moves.push([row, column])
+        stop = true
+      else
+        stop = true
+      end
+    else
+      moves.push([row, column])
+    end
+    return stop
   end
 end
 
