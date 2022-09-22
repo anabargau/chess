@@ -1,4 +1,4 @@
-require 'pry-byebug'
+require 'yaml'
 
 class Game
   attr_accessor :board
@@ -175,10 +175,6 @@ class Game
     @players.push(Player.new(name, 'black'))
     create_board
     initialize_board
-    move_piece(identify_square('e2'), identify_square('e4'), @players[0], @players[1])
-    move_piece(identify_square('e7'), identify_square('e5'), @players[0], @players[1])
-    move_piece(identify_square('d1'), identify_square('h5'), @players[0], @players[1])
-    move_piece(identify_square('e8'), identify_square('e7'), @players[0], @players[1])
     display_board
     play
   end
